@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "_default": {
+      "link": "p8c8"
+    },
+    "p8c8": {
+      "applicationId": "zlyOnlJN7drUMhYlWVmCCMel7gd4rGJ2cH461ux0"
+    }
+  }
+}
