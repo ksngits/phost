@@ -2,6 +2,36 @@
 <html>
 
 <style>
+
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+ 
+.isa_info, .isa_success, .isa_warning, .isa_error {
+margin: 10px 0px;
+padding:12px;
+}
+.isa_info {
+    color: #00529B;
+    background-color: #BDE5F8;
+}
+.isa_success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+.isa_warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
+}
+.isa_error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+.isa_info i, .isa_success i, .isa_warning i, .isa_error i {
+    margin:10px 22px;
+    font-size:2em;
+    vertical-align:middle;
+}
+
+
 form {
     /* Just to center the form on the page */
     margin: 0 auto;
@@ -63,23 +93,51 @@ button {
 
   <head>
     <title>p8c8 - poc</title>
-    <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.2.7.min.js"></script>
+    <script type="text/javascript" src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
 <script language="javascript">
  // Initialize Parse
- Parse.initialize("app id", "key");
+ Parse.initialize("zlyOnlJN7drUMhYlWVmCCMel7gd4rGJ2cH461ux0", "5ALetjerrvzNsPyRNEO4iWMWrSDVYfJUxNJ5oOkN");
+
+ function isNumber(n)
+ {
+    n = parseFloat(n);
+    return (n > 0);
+ }
  function parseadd()
  {
-   Parse.Cloud.run('RegisterVisit', { MemberId: 10001}).then(
-        function(user) {
-            alert('Success ' + user);
-        }, function(error) { alert('failed ' + error); });
+   var mid = document.getElementById("mid").value;
+   var bill = document.getElementById("bill").value;
 
-    Parse.Cloud.run('RegisterVisit', { MemberId: 1}).then(
-        function(user) {
-            alert('Success ' + user);
-        }, function(error) { alert('failed ' + error.message); });
+   if (!isNumber(mid))
+   {
+        update("Not a valid Membership id");
+        return;
+   }
+        
+    if (!isNumber(bill))
+    {
+        update("Not a valid bill Amount");
+        return;
+    }
+
+   document.getElementById("status").innerText='';
+   //var register = new Object(); register.MemberId=mid; register.Bill = bill; 
+   //var pjson = JSON.stringify(register);
+  
+   Parse.Cloud.run('RegisterVisit', { MemberId: mid , bill: bill}).then (
+            function(Msg) {
+                update(Msg); 
+
+            }, function(error) { 
+                update(error.message); 
+            }
+        );
  }
 
+ function update(err)
+ {
+  document.getElementById("status").innerText = err;
+ }
 </script>
   </head>
   <body>
@@ -90,7 +148,7 @@ button {
      <form onsubmit="event.preventDefault();javascript:parseadd();">
     <div>
         <label for="id">Member id:</label>
-        <input type="text" id="id" name="mid" />
+        <input type="text" id="mid" name="mid" />
     </div>
     <div>
         <label for="amt">Bill Amt:</label>
@@ -103,6 +161,9 @@ button {
     
     <div class="button">
         <button type="submit">Register Visit</button>
+    </div>
+
+    <div class="isa_success" id="status">
     </div>
 </form>   
     
